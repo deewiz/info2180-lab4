@@ -13,3 +13,22 @@ function mystarter(){
         console.log(typeof(heroname));
         console.log(typeof(alias));
         console.log(typeof(biography));
+        if (hero_form === ''){
+            //do
+            console.log("This is 1");
+            fetch("superheroes.php")
+            .then(response => {
+                if (response.ok) {
+                    return response.text()
+                } else {
+                    return Promise.reject('something went wrong!')
+                }
+            })
+            .then(data => {
+                message.innerHTML = data;
+                heroname.innerHTML = "";
+                alias.innerHTML = "";
+                biography.innerHTML = "";
+                //alert(`Superheroes List \n ${data}`);
+            })
+            .catch(error => console.log('There was an error: ' + error));
