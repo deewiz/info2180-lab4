@@ -74,7 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'){
     endforeach;
     $line .= "</ul>";
     echo $line;
-}elseif ($_SERVER['REQUEST_METHOD'] == 'POST'){
+}
+elseif ($_SERVER['REQUEST_METHOD'] == 'POST'){
     //print("I am here");
     $ogmsg = json_decode(file_get_contents('php://input'), true);
     $formdata = filter_var($ogmsg, FILTER_SANITIZE_STRING);
