@@ -1,6 +1,5 @@
 <?php
 
-$data = [];
 $superheroes = [
   [
       "id" => 1,
@@ -65,35 +64,29 @@ $superheroes = [
 ];
 
 
-$data = json_encode($superheroes);
-if ($_SERVER['REQUEST_METHOD'] == 'GET'){
-    $line = '';
-    $line .= "<ul>";
-    foreach ($superheroes as $superhero):
-        $line .= "<li>{$superhero['alias']}</li>";
-    endforeach;
-    $line .= "</ul>";
-    echo $line;
-}
-elseif ($_SERVER['REQUEST_METHOD'] == 'POST'){
-    //print("I am here");
-    $ogmsg = json_decode(file_get_contents('php://input'), true);
-    $formdata = filter_var($ogmsg, FILTER_SANITIZE_STRING);
-    $test = true;
-    foreach ($superheroes as $superhero):
-        if(strtolower($formdata) == strtolower($superhero['name']) || strtolower($formdata) == strtolower($superhero['alias'])){
-            $data = $superhero;
-            $test = false;
-            break;
+$message="";
+
+$query= filter_input(INPUT_GET, "query", FILTER_SANITIZE_STRING);
+
+if (strlen($query)>0){
+    $message="<font color='red'><h3>SUPERHERO NOT FOUND.</h3>";
+    foreach ($superheroes as $superhero){ 
+        if ($superhero['alias'] === $query || strtoupper($superhero['alias']) === $query || strtolower($superhero['alias']) === $query || $superhero['name'] === $query || strtolower($superhero['name']) === $query || strtoupper($superhero['name']) === $query){
+            $message = "<h3>".strtoupper($superhero["alias"])."</h3>";
+            $message .= "<h4>"."A.K.A ".strtoupper($superhero["name"])."</h4>";
+            $message .= "<p>".$superhero["biography"]."</p>";
         }
-    endforeach;
-    if (!$test){
-        echo json_encode($data);
-    }else{
-        echo "Hero Not Found";
-    }
-    
+    }    
+
 }
 
+echo $message;
+?> 
 
-?>
+<?php if($query===""):?>
+<ul>
+<?php foreach ($superheroes as $superhero): ?>
+  <li><?= $superhero['alias']; ?></li>
+<?php endforeach; ?>
+</ul>
+<?php endif;?>
